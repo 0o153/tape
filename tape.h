@@ -30,14 +30,14 @@ struct machₜ {
 
 typedef struct tapeₜ {
 	Cell  free;
-	Size  free_sz;
+	Size  freeₛ;
 
 	Cell  used;
-	Size  used_sz;
+	Size  usedₛ;
 	
 	Cell *mesh;
-	Size  mesh_sz;
-	Size  bulk_sz;
+	Size  meshₛ;
+	Size  bulkₛ;
 } Tape;
 
 
@@ -59,14 +59,16 @@ typedef union dataₜ {
 
 struct unitₜ {
 	Unit prev;
-	Unit next;
+    Unit next;
+    
 	Data data;
 };
 
 
 struct cellₜ {	
 	Cell prev;
-	Cell next;
+    Cell next;
+    
 	struct unitₜ unit;
 };
 

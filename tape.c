@@ -13,31 +13,31 @@ void wind(Stor stor, Size bulk_sz)
 	stor->free = 0;
 	stor->used = 0;
 	stor->mesh = 0;
-	stor->free_sz = 0;
-	stor->used_sz = 0;
-	stor->mesh_sz = 0;
-	stor->bulk_sz = bulk_sz;
+	stor->freeₛ = 0;
+	stor->usedₛ = 0;
+	stor->meshₛ = 0;
+	stor->bulkₛ = bulk_sz;
 }
 
 
 static inline int grow(Stor stor) 
 {
-	if (stor->mesh_sz == 0) {
+	if (stor->meshₛ == 0) {
 		if (!(stor->mesh = malloc(sizeof(Cell))))
 			return FAILURE;
 	} else {
-		if (!(stor->mesh = realloc(stor->mesh, sizeof(Cell) * (stor->mesh_sz + 1))))
+		if (!(stor->mesh = realloc(stor->mesh, sizeof(Cell) * (stor->meshₛ + 1))))
 			return FAILURE;
     }
         
-	if (!(stor->mesh[stor->mesh_sz] = malloc(stor->bulk_sz * sizeof(struct cellₜ))))
+	if (!(stor->mesh[stor->meshₛ] = malloc(stor->bulkₛ * sizeof(struct cellₜ))))
         return FAILURE;
         
     Cell cell;
     
-	for (int i = 0; i < stor->bulk_sz; i++) 
+	for (int i = 0; i < stor->bulkₛ; i++) 
 	{
-		cell = stor->mesh[stor->mesh_sz] + i;
+		cell = stor->mesh[stor->meshₛ] + i;
 		cell->next = stor->free;
         cell->prev = 0;
         
@@ -50,8 +50,8 @@ static inline int grow(Stor stor)
 		stor->free = cell;
     }
     
-	stor->free_sz += stor->bulk_sz;
-    stor->mesh_sz ++;
+	stor->freeₛ += stor->bulkₛ;
+    stor->meshₛ ++;
     
 	return SUCCESS;
 }
@@ -59,7 +59,7 @@ static inline int grow(Stor stor)
 
 Unit pull(Stor stor) 
 {
-	if (stor->free_sz < 2 && grow(stor) == FAILURE)
+	if (stor->freeₛ < 2 && grow(stor) == FAILURE)
         return 0;
         
 	Cell cell;
@@ -72,8 +72,8 @@ Unit pull(Stor stor)
     cell->prev = 0;
 	stor->used = cell;
     
-    stor->free_sz--;
-    stor->used_sz++;
+    stor->freeₛ--;
+    stor->usedₛ++;
     
 	Unit unit;
     unit = &cell->unit;
@@ -103,8 +103,8 @@ int bail(Unit unit, Stor stor)
     cell->prev = 0;
     stor->free = cell;
     
-	stor->free_sz++;
-    stor->used_sz--;
+	stor->freeₛ++;
+    stor->usedₛ--;
     
 	return SUCCESS;
 }
@@ -112,12 +112,12 @@ int bail(Unit unit, Stor stor)
 
 void wipe(Stor stor) 
 {
-	for (int i = 0; i < stor->mesh_sz; i++)
+	for (int i = 0; i < stor->meshₛ; i++)
 		if (stor->mesh[i])
             free(stor->mesh[i]);
             
 	if (stor->mesh)
         free(stor->mesh);
         
-	wind(stor, stor->bulk_sz);
+	wind(stor, stor->bulkₛ);
 }
