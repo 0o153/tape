@@ -4,50 +4,103 @@
 #include <sys/types.h>
 
 
-typedef struct unit_t* Unit;
+typedef struct machₜ* Mach;
 
 
-struct unit_t {
-    Unit prev;
-    Unit next;
-    int  data;
+typedef struct tapeₜ* Stor;
+
+
+typedef struct cellₜ* Cell;
+
+
+typedef size_t Size;
+
+
+struct machₜ {
+	Stor stor;
+
+	Cell make;
+
+	Cell main;
+	Cell fork;
+
+	Size ceil;
 };
 
 
-typedef struct cell_t* Cell;
+typedef struct tapeₜ {
+	Cell  free;
+	Size  free_sz;
+
+	Cell  used;
+	Size  used_sz;
+	
+	Cell *mesh;
+	Size  mesh_sz;
+	Size  bulk_sz;
+} Tape;
 
 
-struct cell_t {    
-    Cell prev;
-    Cell next;
+typedef int Knot;
 
-    struct unit_t unit;
+
+typedef struct unitₜ* Unit;
+
+
+typedef void (*Func)(Mach);
+
+
+typedef union dataₜ {
+	Knot k;
+	Unit u;
+	Func f;
+} Data;
+
+
+struct unitₜ {
+	Unit prev;
+	Unit next;
+	Data data;
 };
 
 
-typedef struct tape_t* Tape;
+struct cellₜ {	
+	Cell prev;
+	Cell next;
+	struct unitₜ unit;
+};
 
 
-typedef struct tape_t {
-    Cell   free;
-    size_t free_sz;
-
-    Cell   used;
-    size_t used_sz;
-
-    Cell*  list;
-    size_t list_sz;
-    size_t bulk_sz;
-} memory_t;
+extern void wind(Stor, Size);
 
 
-extern void wind(Tape, size_t);
+extern Unit pull(Stor);
 
 
-extern Unit pull(Tape);
+extern int  bail(Unit, Stor);
 
 
-extern int  bail(Unit, Tape);
+extern void wipe(Stor);
 
 
-extern void wipe(Tape);
+// TODO:
+
+extern void fork(Mach);
+
+
+extern void push(Mach);
+
+
+extern void join(Mach);
+
+
+extern Unit take(Mach);
+
+
+extern void drop(Mach);
+
+
+extern void swap(Mach);
+
+
+extern void test(Mach);

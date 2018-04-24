@@ -5,17 +5,17 @@
 
 
 int main() {
-    memory_t mem;
-    wind(&mem, 1024 * 256);
+    Tape tape;
+    wind(&tape, 1024 * 256);
 
     for (int i = 0; i < N; i++) {
-        Unit x = pull(&mem);
-        x->data = i;
-        bail(x, &mem);
-        x = pull(&mem);
+        Unit x = pull(&tape);
+        x->data.k = i;
+        bail(x, &tape);
+        x = pull(&tape);
     }
 
-    wipe(&mem);
+    wipe(&tape);
 
     return 0;
 }

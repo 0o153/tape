@@ -4,7 +4,7 @@
 
 #define N 1000000
 
-#define UNIT_SZ sizeof(struct unit_t)
+#define UNIT_SZ sizeof(struct unitₜ)
 
 
 int main() {
@@ -12,7 +12,7 @@ int main() {
 
     for (int i = 0; i < N; i++) {
         Unit x = malloc(UNIT_SZ);
-        x->data = i;
+        x->data.k = i;
         free(x);
         x = malloc(UNIT_SZ);
         mem[i] = x;
