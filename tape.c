@@ -8,7 +8,7 @@
 #define FAILURE 1
 
 
-void wind(Stor stor, Size bulk_sz) 
+void wind(Stor stor, Size bulkₛ)
 {
 	stor->free = 0;
 	stor->used = 0;
@@ -16,7 +16,7 @@ void wind(Stor stor, Size bulk_sz)
 	stor->freeₛ = 0;
 	stor->usedₛ = 0;
 	stor->meshₛ = 0;
-	stor->bulkₛ = bulk_sz;
+	stor->bulkₛ = bulkₛ;
 }
 
 
@@ -31,7 +31,7 @@ static inline int grow(Stor stor)
 	}
         
 	if (!(stor->mesh[stor->meshₛ] = malloc(stor->bulkₛ * sizeof(struct cellₜ))))
-        return FAILURE;
+        	return FAILURE;
         
 	Cell cell;
     
@@ -59,14 +59,16 @@ static inline int grow(Stor stor)
 
 Unit pull(Stor stor) 
 {
-	if (stor->freeₛ < 2 && grow(stor) == FAILURE)
+	if (stor->freeₛ == 0 && grow(stor) == FAILURE)
 		return 0;
         
 	Cell cell;
 	cell = stor->free;
     
 	stor->free = cell->next;
-	stor->free->prev = 0;
+
+	if (stor->free)
+		stor->free->prev = 0;
     
 	cell->next = stor->used;
 	cell->prev = 0;
