@@ -59,7 +59,7 @@ typedef union dataₜ {
 
 struct unitₜ {
 	Unit prev;
-    Unit next;
+	Unit next;
     
 	Data data;
 };
@@ -67,7 +67,7 @@ struct unitₜ {
 
 struct cellₜ {	
 	Cell prev;
-    Cell next;
+	Cell next;
     
 	struct unitₜ unit;
 };

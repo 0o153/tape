@@ -28,30 +28,30 @@ static inline int grow(Stor stor)
 	} else {
 		if (!(stor->mesh = realloc(stor->mesh, sizeof(Cell) * (stor->meshₛ + 1))))
 			return FAILURE;
-    }
+	}
         
 	if (!(stor->mesh[stor->meshₛ] = malloc(stor->bulkₛ * sizeof(struct cellₜ))))
         return FAILURE;
         
-    Cell cell;
+	Cell cell;
     
 	for (int i = 0; i < stor->bulkₛ; i++) 
 	{
 		cell = stor->mesh[stor->meshₛ] + i;
 		cell->next = stor->free;
-        cell->prev = 0;
+		cell->prev = 0;
         
 		cell->unit.prev = 0;
-        cell->unit.next = 0;
+		cell->unit.next = 0;
         
 		if (stor->free)
-            stor->free->prev = cell;
+			stor->free->prev = cell;
             
 		stor->free = cell;
-    }
+	}
     
 	stor->freeₛ += stor->bulkₛ;
-    stor->meshₛ ++;
+	stor->meshₛ ++;
     
 	return SUCCESS;
 }
@@ -60,26 +60,26 @@ static inline int grow(Stor stor)
 Unit pull(Stor stor) 
 {
 	if (stor->freeₛ < 2 && grow(stor) == FAILURE)
-        return 0;
+		return 0;
         
 	Cell cell;
-    cell = stor->free;
+	cell = stor->free;
     
 	stor->free = cell->next;
-    stor->free->prev = 0;
+	stor->free->prev = 0;
     
 	cell->next = stor->used;
-    cell->prev = 0;
+	cell->prev = 0;
 	stor->used = cell;
     
-    stor->freeₛ--;
-    stor->usedₛ++;
+	stor->freeₛ--;
+	stor->usedₛ++;
     
 	Unit unit;
-    unit = &cell->unit;
+	unit = &cell->unit;
 	unit->data.k = 0;
 	unit->data.u = 0;
-    unit->data.f = 0;
+	unit->data.f = 0;
     
 	return unit;
 }
@@ -88,23 +88,23 @@ Unit pull(Stor stor)
 int bail(Unit unit, Stor stor) 
 {
 	void *tmp;
-    Cell cell;
+	Cell cell;
     
 	if (!(tmp = (void*)unit) || !(cell = (Cell)(tmp - (2 * sizeof(Cell)))))
-        return FAILURE;
+		return FAILURE;
         
 	if (cell->prev)
-        cell->prev->next = cell->next;
+		cell->prev->next = cell->next;
         
 	if (stor->free)
-        stor->free->prev = cell;
+		stor->free->prev = cell;
         
 	cell->next = stor->free;
-    cell->prev = 0;
-    stor->free = cell;
+	cell->prev = 0;
+	stor->free = cell;
     
 	stor->freeₛ++;
-    stor->usedₛ--;
+	stor->usedₛ--;
     
 	return SUCCESS;
 }
@@ -114,10 +114,10 @@ void wipe(Stor stor)
 {
 	for (int i = 0; i < stor->meshₛ; i++)
 		if (stor->mesh[i])
-            free(stor->mesh[i]);
+			free(stor->mesh[i]);
             
 	if (stor->mesh)
-        free(stor->mesh);
+		free(stor->mesh);
         
 	wind(stor, stor->bulkₛ);
 }
